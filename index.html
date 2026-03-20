@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>砖茶 Brick Tea | The Ritual</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&family=Noto+Serif:ital,wght@1,300;1,700&family=Manrope:wght@200;300;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-primary-fixed": "#291800",
+            "inverse-primary": "#805609",
+            "surface-tint": "#f5bd6a",
+            "on-background": "#e5e2e1",
+            "surface-container-low": "#1c1b1b",
+            "primary-container": "#b9883b",
+            "surface-container-high": "#2a2a2a",
+            "outline-variant": "#504538",
+            "primary-fixed-dim": "#f5bd6a",
+            "background": "#131313",
+            "on-secondary-container": "#ff9a86",
+            "on-primary-fixed-variant": "#624000",
+            "error": "#ffb4ab",
+            "secondary-fixed-dim": "#ffb4a5",
+            "tertiary-fixed-dim": "#d1c4b9",
+            "surface-container": "#201f1f",
+            "on-tertiary-container": "#2f2921",
+            "tertiary": "#d1c4b9",
+            "surface-dim": "#131313",
+            "primary": "#f5bd6a",
+            "secondary-fixed": "#ffdad3",
+            "surface": "#131313",
+            "on-surface": "#e5e2e1",
+            "secondary": "#ffb4a5",
+            "surface-container-lowest": "#0e0e0e",
+            "on-secondary": "#640d02",
+            "on-surface-variant": "#d4c4b3",
+            "tertiary-container": "#998f85",
+            "error-container": "#93000a",
+            "secondary-container": "#842514",
+            "surface-container-highest": "#353534",
+            "tertiary-fixed": "#ede0d5",
+            "on-tertiary-fixed": "#211b14",
+            "on-tertiary-fixed-variant": "#4d453d",
+            "on-primary": "#442b00",
+            "inverse-surface": "#e5e2e1",
+            "on-tertiary": "#362f28",
+            "on-secondary-fixed-variant": "#842514",
+            "primary-fixed": "#ffddb1",
+            "on-primary-container": "#3b2500",
+            "surface-bright": "#3a3939",
+            "on-error": "#690005",
+            "outline": "#9c8f7f",
+            "on-secondary-fixed": "#3f0400",
+            "surface-variant": "#353534",
+            "inverse-on-surface": "#313030",
+            "on-error-container": "#ffdad6"
+          },
+          fontFamily: {
+            "headline": ["Noto Serif", "Noto Serif SC", "serif"],
+            "body": ["Manrope", "sans-serif"],
+            "label": ["Manrope", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+</script>
+<style>
+    body {
+      background-color: #0e0e0e;
+      background-image: repeating-linear-gradient(
+        to right,
+        transparent,
+        transparent 80px,
+        rgba(184, 135, 58, 0.03) 81px
+      );
+    }
+    .vertical-text { writing-mode: vertical-rl; }
+    .viscous-fade { transition: all 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+    .ghost-text {
+      color: rgba(229, 226, 225, 0.03);
+      user-select: none;
+      pointer-events: none;
+    }
+    .tea-item:hover {
+      background: radial-gradient(circle, rgba(122, 30, 14, 0.15) 0%, transparent 70%);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body class="font-body text-on-surface selection:bg-primary-container/30">
+
+<!-- 顶部导航 -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-12 py-6 w-full bg-transparent viscous-fade">
+    <div class="text-xl font-headline italic text-[#B8873A] tracking-[0.15em]">
+        砖茶 Brick Tea
+    </div>
+    <nav class="hidden md:flex gap-12 items-center">
+        <a class="text-[#B8873A] font-bold border-b border-[#B8873A]/50 pb-1 font-light text-xs tracking-widest transition-colors duration-500" href="#black">黑茶</a>
+        <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#white">白茶</a>
+        <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#red">红茶</a>
+        <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#oolong">乌龙</a>
+    </nav>
+</header>
+
+<!-- 首屏 Hero -->
+<section class="relative h-screen flex flex-col items-center justify-center bg-[#080808] overflow-hidden">
+    <div class="absolute inset-0 flex items-center justify-center">
+        <span class="ghost-text font-headline text-[40rem] leading-none">茶</span>
+    </div>
+    <div class="relative z-10 text-center">
+        <h1 class="font-headline italic text-7xl md:text-9xl text-primary tracking-[0.2em] mb-4">砖茶</h1>
+        <p class="font-body font-light text-sm tracking-[0.5em] text-[#6B6259] uppercase">The Ritual of Brick Tea</p>
+    </div>
+    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[1px] h-24 bg-primary/30"></div>
+</section>
+
+<!-- 沏茶方式 -->
+<section class="py-40 px-6 md:px-24 bg-surface-container-lowest">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-32">
+            <h2 class="font-headline italic text-4xl text-on-surface tracking-widest mb-2">沏茶方式</h2>
+            <div class="w-12 h-[1px] bg-primary"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-24">
+            <!-- 一杯 -->
+            <div class="border border-primary/20 p-16 flex flex-col items-start gap-8 bg-surface-container-lowest viscous-fade hover:border-primary/50 group">
+                <span class="font-headline italic text-5xl text-primary">「一杯」</span>
+                <div class="space-y-4">
+                    <p class="text-sm tracking-widest text-on-surface/80">320ml，独饮，不续水。冷热可选。专注当下，一次萃取，完整体验茶的本味。</p>
+                    <p class="text-xs text-[#6B6259] tracking-widest uppercase">320ML · 冷热可选 · 不续水</p>
+                </div>
+            </div>
+            <!-- 一壶 -->
+            <div class="border border-primary/20 p-16 flex flex-col items-start gap-8 bg-surface-container-lowest viscous-fade hover:border-primary/50 group">
+                <span class="font-headline italic text-5xl text-primary">「一壶」</span>
+                <div class="space-y-4">
+                    <p class="text-sm tracking-widest text-on-surface/80">一把茶壶，一只公道杯，一人份茶杯。热水不限量续。多人共享，观茶汤从浓至淡的演变。</p>
+                    <p class="text-xs text-[#6B6259] tracking-widest uppercase">共享 · 热水不限续 · 加杯 ¥15/人</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 黑茶 -->
+<section class="relative py-40 overflow-hidden" id="black">
+    <div class="absolute top-0 right-10 z-0">
+        <span class="ghost-text font-headline text-[30rem] leading-none">黑</span>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
+        <div class="mb-24">
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">黑茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">DARK SELECTION</span></h2>
+        </div>
+        <div class="grid gap-20">
+            <!-- 茉莉金尖 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">茉莉金尖</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 2020年中度发酵特级饮料</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">夜间茉莉窨制，花香沁入陈韵，深邃而不失灵动。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥25</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥55</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 草木野韵 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">草木野韵</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 烛火工艺特级饮料</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">烛火慢焙，草木野香与山野气息层层叠出。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥28</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥55</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 老朋友 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">老朋友</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 6年陈化传统工艺康砖散料</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">陈化六年，滋味醇厚绵长，如久别重逢的故人。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥28</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥58</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 白茶 -->
+<section class="relative py-40 overflow-hidden bg-surface-container-lowest" id="white">
+    <div class="absolute top-20 left-10 z-0">
+        <span class="ghost-text font-headline text-[30rem] leading-none">白</span>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
+        <div class="mb-24 flex justify-end">
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest text-right">白茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">SILVER SELECTION</span></h2>
+        </div>
+        <div class="grid gap-20">
+            <!-- 月光美人 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">月光美人</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱 · 景谷秋插头春大白茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">叶面一黑一白，月夜晾晒而成，蜜甜柔和，如月光倒映水面。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥25</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥55</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 黑牡丹 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">黑牡丹</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱 · 无量山变异种古树白茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">古树变异品种，叶色乌黑，滋味深沉，花香悠然飘散。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥38</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥68</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 红茶 -->
+<section class="relative py-40 overflow-hidden" id="red">
+    <div class="absolute bottom-0 right-1/4 z-0">
+        <span class="ghost-text font-headline text-[30rem] leading-none">红</span>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
+        <div class="mb-24">
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">红茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">CRIMSON SELECTION</span></h2>
+        </div>
+        <div class="grid gap-20">
+            <!-- 玫瑰红茶 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">玫瑰红茶</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川蒲江 · 玫瑰花窨制红茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">蒲江玫瑰窨制，花香盈杯，汤色绯红，入口如丝绒般柔滑。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥28</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥58</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 甜桃 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">甜桃</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建寿平 · 柳大无红茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">天然桃香若隐若现，口感轻盈，回甘绵延不绝。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥28</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥58</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 滇红 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">滇红</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱产区 · 日晒红茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">日晒工艺，金毫显露，蜜香浓郁，茶汤如琥珀透光。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥32</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥62</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 乌龙茶 -->
+<section class="relative py-40 overflow-hidden bg-surface-container-lowest" id="oolong">
+    <div class="absolute top-1/4 left-1/2 z-0">
+        <span class="ghost-text font-headline text-[30rem] leading-none">乌</span>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
+        <div class="mb-24 flex justify-center">
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">乌龙茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">VERDANT SELECTION</span></h2>
+        </div>
+        <div class="grid gap-20">
+            <!-- 漳平水仙 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">漳平水仙</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建漳平 · 闽南乌龙代表</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">压制成方砖，兰香清雅，汤色橙黄透亮，入口顺滑。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥32</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥62</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 奇兰 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">奇兰</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建武夷山 · 核心产区小品种岩茶</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">岩骨花香，武夷山小品种珍稀之选，余韵悠长难忘。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥38</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥68</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 清香铁观音 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">清香铁观音</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建安溪 · 半发酵特色乌龙</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">清香型工艺，鲜爽馥郁，兰花香气贯穿始终，回甘清甜。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥38</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
+                        <p class="font-headline text-xl">¥68</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- 页脚 -->
+<footer class="py-24 px-12 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center bg-surface-container-lowest gap-12">
+    <div class="text-center md:text-left">
+        <h4 class="font-headline text-2xl text-primary italic mb-2">砖茶 Brick Tea</h4>
+        <p class="text-xs text-[#6B6259] tracking-widest">成都 · 原叶茶</p>
+    </div>
+    <div class="text-[10px] text-[#6B6259] tracking-widest">
+        © 2024 砖茶 BRICK TEA
+    </div>
+</footer>
+
+</body>
+</html>
