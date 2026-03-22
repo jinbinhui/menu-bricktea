@@ -92,20 +92,108 @@
       background: radial-gradient(circle, rgba(122, 30, 14, 0.15) 0%, transparent 70%);
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+
+    /* 速览模式 */
+    #overview-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 150;
+        display: flex;
+        flex-direction: column;
+        padding: 5rem 1.75rem 1.25rem;
+        background: #0a0908;
+        background-image:
+            repeating-linear-gradient(to right, transparent, transparent 80px, rgba(122,30,14,0.02) 81px),
+            repeating-linear-gradient(to bottom, transparent, transparent 40px, rgba(255,255,255,0.008) 41px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease;
+    }
+    #overview-screen.visible { opacity: 1; pointer-events: auto; }
+
+    /* 一览模式下导航背景 */
+    header.overview-active {
+        background: rgba(10, 9, 8, 0.92) !important;
+        backdrop-filter: blur(8px);
+    }
+
+    /* 菜单卡片列 */
+    .menu-col {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    #overview-screen.visible .menu-col:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:0.1s; }
+    #overview-screen.visible .menu-col:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:0.18s; }
+    #overview-screen.visible .menu-col:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:0.26s; }
+    #overview-screen.visible .menu-col:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:0.34s; }
+    #overview-screen.visible .menu-col:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:0.42s; }
+
+    /* 茶类标题行 */
+    .menu-cat-header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        padding-bottom: 0.45rem;
+        border-bottom: 1px solid rgba(122,30,14,0.5);
+        margin-bottom: 0.35rem;
+    }
+
+    /* 单行菜品条目 */
+    .menu-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0.38rem 0;
+        border-bottom: 1px solid rgba(80,69,56,0.13);
+        gap: 0.5rem;
+        transition: background 0.2s ease;
+        margin: 0 -0.25rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        border-radius: 2px;
+    }
+    .menu-row:hover { background: rgba(122,30,14,0.06); }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row-name {
+        font-size: 0.875rem;
+        color: rgba(229,226,225,0.88);
+        letter-spacing: 0.04em;
+        line-height: 1.3;
+        flex-shrink: 0;
+    }
+    .menu-row-sub {
+        font-size: 7px;
+        color: #504538;
+        letter-spacing: 0.07em;
+        margin-top: 1px;
+        line-height: 1;
+    }
+    .menu-row-price {
+        font-size: 0.7rem;
+        color: rgba(229,226,225,0.45);
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-family: 'Manrope', sans-serif;
+        letter-spacing: 0.03em;
+    }
+
 </style>
 </head>
 <body class="font-body text-on-surface selection:bg-primary-container/30">
 
 <!-- 顶部导航 -->
-<header class="fixed top-0 w-full z-50 flex justify-between items-center px-12 py-6 w-full bg-transparent viscous-fade">
+<header class="fixed top-0 w-full z-[160] flex justify-between items-center px-12 py-6 w-full bg-transparent viscous-fade">
     <div class="text-xl font-headline italic text-[#7A1E0E] tracking-[0.15em]">
         砖茶 Brick Tea
     </div>
     <nav class="hidden md:flex gap-12 items-center">
-        <a class="text-[#7A1E0E] font-bold border-b border-[#7A1E0E]/50 pb-1 font-light text-xs tracking-widest transition-colors duration-500" href="#black">黑茶</a>
+        <a class="text-[#7A1E0E] font-bold border-b border-[#7A1E0E]/50 pb-1 font-light text-xs tracking-widest transition-colors duration-500" href="#black">藏茶</a>
         <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#white">白茶</a>
         <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#red">红茶</a>
         <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#oolong">乌龙</a>
+        <a class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest" href="#drinks">特饮</a>
+        <button onclick="toggleView()" id="viewToggle" class="text-[#6B6259] hover:text-[#E5E2E1] transition-colors duration-500 font-light text-xs tracking-widest border border-[#3d342b] hover:border-[#7A1E0E] px-3 py-1 rounded-sm">一览</button>
     </nav>
 </header>
 
@@ -115,10 +203,44 @@
         <span class="ghost-text font-headline text-[40rem] leading-none">茶</span>
     </div>
     <div class="relative z-10 text-center">
-        <h1 class="font-headline italic text-7xl md:text-9xl text-primary tracking-[0.2em] mb-4">砖茶</h1>
+        <img src="logo.png" alt="砖茶" class="mx-auto mb-8 w-48 md:w-64 object-contain opacity-85">
         <p class="font-body font-light text-sm tracking-[0.5em] text-[#6B6259] uppercase">The Ritual of Brick Tea</p>
     </div>
     <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[1px] h-24 bg-primary/30"></div>
+</section>
+
+<!-- 品牌故事 -->
+<section class="relative py-40 px-6 md:px-24 bg-[#080808] overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-end pr-8 pointer-events-none">
+        <span class="ghost-text font-headline text-[28rem] leading-none">禅</span>
+    </div>
+    <div class="relative z-10 max-w-2xl">
+        <!-- 品牌起源 -->
+        <div class="mb-16">
+            <div class="w-6 h-[1px] bg-primary mb-10"></div>
+            <p class="text-sm font-light tracking-widest text-on-surface/50 leading-[2.2] mb-0">
+                BrickTea，直译为「砖茶」，<br>
+                作为方便存储运输的一种手段出现，<br>
+                简单、便捷、粗糙，<br>
+                默默作为边地生活必备品存在，<br>
+                也是雅安这座小城市旧岁月里重要的经济支柱。
+            </p>
+        </div>
+
+        <!-- 禅语故事 -->
+        <div class="border-l border-primary/30 pl-8 mb-16">
+            <p class="text-[10px] text-[#3d342b] tracking-[0.3em] uppercase mb-5">取名由来</p>
+            <p class="text-xs font-light text-on-surface/30 leading-[2.4] italic tracking-wider">
+                开元中，有沙门道一，住传法院，常日坐禅。师知是法器，往问曰：「大德坐禅图什么？」一曰：「图作佛。」师乃取一塼於庵前石上磨。一曰：「师作什么？」师曰：「磨镜。」一曰：「磨塼岂得成镜邪？」师曰：「坐禅岂得作佛邪？」
+            </p>
+        </div>
+
+        <!-- 核心理念 -->
+        <div>
+            <p class="font-headline italic text-2xl text-on-surface/70 tracking-widest leading-relaxed mb-3">请放轻松，在这里，</p>
+            <p class="font-headline italic text-2xl text-primary tracking-widest leading-relaxed">茶只有在入口的那一刻带来的体验最真实。</p>
+        </div>
+    </div>
 </section>
 
 <!-- 沏茶方式 -->
@@ -141,76 +263,95 @@
             <div class="border border-primary/20 p-16 flex flex-col items-start gap-8 bg-surface-container-lowest viscous-fade hover:border-primary/50 group">
                 <span class="font-headline italic text-5xl text-primary">「一壶」</span>
                 <div class="space-y-4">
-                    <p class="text-sm tracking-widest text-on-surface/80">一把茶壶，一只公道杯，一人份茶杯。热水不限量续。多人共享，观茶汤从浓至淡的演变。</p>
-                    <p class="text-xs text-[#6B6259] tracking-widest uppercase">共享 · 热水不限续 · 加杯 ¥15/人</p>
+                    <p class="text-sm tracking-widest text-on-surface/80">一把茶壶，一只公道杯，一人份茶杯。选择「一席」可不限量续水。多人共享，观茶汤从浓至淡的演变。</p>
+                    <p class="text-xs text-[#6B6259] tracking-widest uppercase">一席可续水 · 加杯 ¥15/人</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 黑茶 -->
+<!-- 藏茶 -->
 <section class="relative py-40 overflow-hidden" id="black">
     <div class="absolute top-0 right-10 z-0">
-        <span class="ghost-text font-headline text-[30rem] leading-none">黑</span>
+        <span class="ghost-text font-headline text-[30rem] leading-none">藏</span>
     </div>
     <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
         <div class="mb-24">
-            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">黑茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">DARK SELECTION</span></h2>
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">藏茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">TIBETAN · DARK SELECTION</span></h2>
+            <p class="text-xs text-[#6B6259] tracking-widest mt-4 max-w-2xl">雅安藏茶，经晒青、杀青、渥堆发酵制成，药香、陈香独特，历经茶马古道岁月沉淀。</p>
         </div>
         <div class="grid gap-20">
-            <!-- 茉莉金尖 -->
+            <!-- 糯香藏茶 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">茉莉金尖</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 2020年中度发酵特级饮料</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">夜间茉莉窨制，花香沁入陈韵，深邃而不失灵动。</p>
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">糯香藏茶</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安周公山云雾茶园 · 2020年 · 深度发酵 · 糯香草窨制</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">糯香草夜间窨制，糯米香与陈韵交融，汤色深红，入口绵甜。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥25</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥55</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
                 </div>
             </div>
-            <!-- 草木野韵 -->
+            <!-- 茉莉藏茶 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
                 <div class="max-w-xl text-right">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">草木野韵</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 烛火工艺特级饮料</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">烛火慢焙，草木野香与山野气息层层叠出。</p>
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">茉莉藏茶</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安周公山云雾茶园 · 2020年 · 深度发酵 · 茉莉花窨制</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">茉莉花夜间窨制，花香沁入陈韵，灵动中带有藏茶特有的深沉。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-left">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥28</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥55</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
                 </div>
             </div>
-            <!-- 老朋友 -->
+            <!-- BrickTea 1号 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">老朋友</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安 · 6年陈化传统工艺康砖散料</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">陈化六年，滋味醇厚绵长，如久别重逢的故人。</p>
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">BrickTea 1号</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安周公山云雾茶园 · 2014年 · 深度发酵 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">十二年陈化，谷物香与枣香层层叠出，老茶特有的药香悠然回荡。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥28</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥58</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
+                </div>
+            </div>
+            <!-- BrickTea 2号 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">BrickTea 2号</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安周公山云雾茶园 · 2016年 · 浅度发酵 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">浅度发酵，保留更多鲜活花果气息，菌香隐约，清爽不失醇厚。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥28</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥58</p></div>
+                </div>
+            </div>
+            <!-- BrickTea 3号 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">BrickTea 3号</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安灯草坪有机茶园 · 2025年 · 中度发酵 · 轻微烘焙 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">有机茶园中度发酵轻微烘焙，可可香与花香交织，层次丰富而细腻。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
+                </div>
+            </div>
+            <!-- BrickTea 4号 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">BrickTea 4号</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川雅安周公山云雾茶园 · 2015年 · 深度发酵 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">十一年深度陈化，参香与药香交融，是藏茶陈韵的极致表达。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
                 </div>
             </div>
         </div>
@@ -231,36 +372,36 @@
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
                     <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">月光美人</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱 · 景谷秋插头春大白茶</p>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南景谷秧塔 · 2023年 · 景谷大白茶 · 一级</p>
                     <p class="text-sm font-light text-on-surface/60 italic">叶面一黑一白，月夜晾晒而成，蜜甜柔和，如月光倒映水面。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥25</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥55</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
+                </div>
+            </div>
+            <!-- 白毫银针 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">白毫银针</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建福鼎 · 2025年 · 华茶2号 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">大毫茶单芽制成，满披白毫，花香毫香并发，茶汤鲜爽如初春晨露。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥48</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥78</p></div>
                 </div>
             </div>
             <!-- 黑牡丹 -->
-            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
-                <div class="max-w-xl text-right">
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
                     <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">黑牡丹</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱 · 无量山变异种古树白茶</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">古树变异品种，叶色乌黑，滋味深沉，花香悠然飘散。</p>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱无量山 · 2024年 · 紫化大叶种 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">变异紫化品种，叶色乌黑，滋味深沉，兰花香悠然飘散。</p>
                 </div>
-                <div class="mt-8 md:mt-0 flex gap-12 text-left">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥38</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥68</p>
-                    </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
                 </div>
             </div>
         </div>
@@ -275,60 +416,67 @@
     <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
         <div class="mb-24">
             <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">红茶 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">CRIMSON SELECTION</span></h2>
+            <p class="text-xs text-[#6B6259] tracking-widest mt-4 max-w-2xl">不高温杀青，经萎凋—揉捻—发酵制成，茶汤甜润，花香、果香层次丰富。</p>
         </div>
         <div class="grid gap-20">
-            <!-- 玫瑰红茶 -->
+            <!-- 川红工夫 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">玫瑰红茶</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川蒲江 · 玫瑰花窨制红茶</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">蒲江玫瑰窨制，花香盈杯，汤色绯红，入口如丝绒般柔滑。</p>
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">川红工夫</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">四川蒲江 · 2025年 · 川茶群体种 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">高山工夫制法，蜜香清甜，花香悠远，汤色橙红透亮。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥28</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥58</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
+                </div>
+            </div>
+            <!-- 滇红工夫 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">滇红工夫</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南临沧凤庆 · 2025年 · 云南大叶种 · 特一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">凤庆大叶种，金毫显露，花香蜜香交织，茶汤如琥珀透光。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥28</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥58</p></div>
                 </div>
             </div>
             <!-- 甜桃 -->
-            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
-                <div class="max-w-xl text-right">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">甜桃</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建寿平 · 柳大无红茶</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">天然桃香若隐若现，口感轻盈，回甘绵延不绝。</p>
-                </div>
-                <div class="mt-8 md:mt-0 flex gap-12 text-left">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥28</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥58</p>
-                    </div>
-                </div>
-            </div>
-            <!-- 滇红 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">滇红</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">云南普洱产区 · 日晒红茶</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">日晒工艺，金毫显露，蜜香浓郁，茶汤如琥珀透光。</p>
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">甜桃</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建南平桐木关 · 2025年 · 金牡丹 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">天然蜜桃香馥郁，桐木关高山赋予花香底蕴，回甘清甜绵长。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥32</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥62</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥32</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥62</p></div>
+                </div>
+            </div>
+            <!-- 祁门工夫 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                <div class="max-w-xl text-right">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">祁门工夫</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">安徽黄山 · 2025年 · 安徽原产槠叶种 · 一级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">「祁门香」馥郁持久，玫瑰蜜韵与焦糖尾韵令人难忘。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-left">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
+                </div>
+            </div>
+            <!-- 正山小种 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">正山小种</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建南平武夷山 · 2025年 · 武夷菜茶群体种 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">桐木关松木熏制，烟香与桂圆蜜香交融，世界红茶的发源之地。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
                 </div>
             </div>
         </div>
@@ -349,53 +497,131 @@
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
                 <div class="max-w-xl">
                     <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">漳平水仙</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建漳平 · 闽南乌龙代表</p>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建漳平龙岩 · 2025年 · 光芒7号水仙种 · 一级</p>
                     <p class="text-sm font-light text-on-surface/60 italic">压制成方砖，兰香清雅，汤色橙黄透亮，入口顺滑。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
-                        <p class="font-headline text-xl">¥32</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥62</p>
-                    </div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥25</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥55</p></div>
                 </div>
             </div>
             <!-- 奇兰 -->
             <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
                 <div class="max-w-xl text-right">
                     <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">奇兰</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建武夷山 · 核心产区小品种岩茶</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">岩骨花香，武夷山小品种珍稀之选，余韵悠长难忘。</p>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建南平武夷山 · 2025年 · 武夷奇兰 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">岩骨花香，武夷山小品种珍稀之选，兰香蜜韵，余韵悠长。</p>
                 </div>
                 <div class="mt-8 md:mt-0 flex gap-12 text-left">
-                    <div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥38</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥68</p></div>
+                </div>
+            </div>
+            <!-- 华岗原始林 -->
+            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                <div class="max-w-xl">
+                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">华岗原始林</h3>
+                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">台湾梨山华岗水源头 · 2025年 · 青心乌龙 · 特级</p>
+                    <p class="text-sm font-light text-on-surface/60 italic">梨山高海拔原始林种植，玉兰花香馥郁，果香层次分明，极为稀有。</p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-12 text-right">
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p><p class="font-headline text-xl">¥48</p></div>
+                    <div><p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p><p class="font-headline text-xl">¥78</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- 特色饮品 -->
+<section class="relative py-40 overflow-hidden bg-surface-container-lowest" id="drinks">
+    <div class="absolute top-1/3 right-8 z-0">
+        <span class="ghost-text font-headline text-[30rem] leading-none">饮</span>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-24">
+        <div class="mb-24">
+            <h2 class="font-headline italic text-6xl text-on-surface tracking-widest">特色饮品 <span class="text-sm font-body not-italic tracking-[0.3em] text-[#6B6259] ml-8">SIGNATURE DRINKS</span></h2>
+            <p class="text-xs text-[#6B6259] tracking-widest mt-4 max-w-2xl">以茶为魂，融入时令食材与传统工艺，每一杯都是独特风味探索。</p>
+        </div>
+
+        <!-- 冷饮 -->
+        <div class="mb-24">
+            <div class="flex items-center gap-6 mb-16">
+                <h3 class="font-headline italic text-2xl text-on-surface/60 tracking-widest">冷饮</h3>
+                <div class="flex-1 h-[1px] bg-outline-variant/20"></div>
+                <span class="text-[10px] text-[#3d342b] tracking-widest uppercase">Cold</span>
+            </div>
+            <div class="grid gap-20">
+                <!-- 小吴的杏皮水 -->
+                <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                    <div class="max-w-xl">
+                        <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">小吴的杏皮水</h3>
+                        <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">雅安藏茶 · 李广杏 · 酸果子 · 陈皮</p>
+                        <p class="text-sm font-light text-on-surface/60 italic">西北风物与川藏茶香的相遇，酸甜清爽，陈皮余韵悠长。</p>
+                    </div>
+                    <div class="mt-8 md:mt-0 text-right">
                         <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
                         <p class="font-headline text-xl">¥38</p>
                     </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥68</p>
+                </div>
+                <!-- 星星 -->
+                <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                    <div class="max-w-xl text-right">
+                        <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">星星</h3>
+                        <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">月光美人 · 青苹果 · 金银花 · 胎菊 · 薄荷</p>
+                        <p class="text-sm font-light text-on-surface/60 italic">白茶与花草的清灵协奏，清新透亮，如夏夜繁星。</p>
+                    </div>
+                    <div class="mt-8 md:mt-0 text-left">
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥38</p>
+                    </div>
+                </div>
+                <!-- 果汁汽水 -->
+                <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                    <div class="max-w-xl">
+                        <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">果汁汽水</h3>
+                        <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">NFC 果汁现打汽水</p>
+                        <p class="text-sm font-light text-on-surface/60 italic">NFC 鲜榨果汁注入二氧化碳，气泡细腻，果香鲜活。</p>
+                    </div>
+                    <div class="mt-8 md:mt-0 text-right">
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥28</p>
                     </div>
                 </div>
             </div>
-            <!-- 清香铁观音 -->
-            <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
-                <div class="max-w-xl">
-                    <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">清香铁观音</h3>
-                    <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">福建安溪 · 半发酵特色乌龙</p>
-                    <p class="text-sm font-light text-on-surface/60 italic">清香型工艺，鲜爽馥郁，兰花香气贯穿始终，回甘清甜。</p>
-                </div>
-                <div class="mt-8 md:mt-0 flex gap-12 text-right">
-                    <div>
+        </div>
+
+        <!-- 热饮 -->
+        <div>
+            <div class="flex items-center gap-6 mb-16">
+                <h3 class="font-headline italic text-2xl text-on-surface/60 tracking-widest">热饮</h3>
+                <div class="flex-1 h-[1px] bg-outline-variant/20"></div>
+                <span class="text-[10px] text-[#3d342b] tracking-widest uppercase">Hot</span>
+            </div>
+            <div class="grid gap-20">
+                <!-- 酥油拿铁 -->
+                <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group">
+                    <div class="max-w-xl">
+                        <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">酥油拿铁</h3>
+                        <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">雅安藏茶 · 内蒙酥油 · 黑糖 · 牛奶 · 肉桂 · 炒米</p>
+                        <p class="text-sm font-light text-on-surface/60 italic">藏茶融入酥油与炒米，高原风味与咖啡馆语境的温暖碰撞。</p>
+                    </div>
+                    <div class="mt-8 md:mt-0 text-right">
                         <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
                         <p class="font-headline text-xl">¥38</p>
                     </div>
-                    <div>
-                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">壶</p>
-                        <p class="font-headline text-xl">¥68</p>
+                </div>
+                <!-- 蒸茶 -->
+                <div class="tea-item flex flex-col md:flex-row justify-between items-start md:items-end border-b border-outline-variant/10 pb-12 viscous-fade group text-right flex-row-reverse">
+                    <div class="max-w-xl text-right">
+                        <h3 class="font-headline text-3xl mb-2 group-hover:text-primary viscous-fade">蒸茶</h3>
+                        <p class="text-xs font-label tracking-widest text-[#6B6259] mb-4">年份藏茶 · 蒸制</p>
+                        <p class="text-sm font-light text-on-surface/60 italic">以蒸汽萃取年份藏茶，茶香更为醇厚凝聚，温润而深邃。</p>
+                    </div>
+                    <div class="mt-8 md:mt-0 text-left">
+                        <p class="text-[10px] text-[#6B6259] uppercase tracking-widest mb-1">杯</p>
+                        <p class="font-headline text-xl">¥42</p>
                     </div>
                 </div>
             </div>
@@ -411,9 +637,195 @@
         <p class="text-xs text-[#6B6259] tracking-widest">成都 · 原叶茶</p>
     </div>
     <div class="text-[10px] text-[#6B6259] tracking-widest">
-        © 2024 砖茶 BRICK TEA
+        © 2026 砖茶 BRICK TEA
     </div>
 </footer>
+
+<!-- 菜单卡片视图 -->
+<div id="overview-screen">
+
+    <!-- 菜单顶部：品牌名居中，横线两侧延伸 -->
+    <div style="flex-shrink:0;text-align:center;margin-bottom:1.1rem;">
+        <div style="display:flex;align-items:center;gap:0.875rem;justify-content:center;">
+            <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(122,30,14,0.45));"></div>
+            <p class="font-headline italic text-primary" style="font-size:1.1rem;letter-spacing:0.18em;white-space:nowrap;">砖茶 Brick Tea</p>
+            <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(122,30,14,0.45));"></div>
+        </div>
+        <p style="font-size:7.5px;color:#3d342b;letter-spacing:0.28em;text-transform:uppercase;margin-top:4px;">成都 · 原叶茶 · The Ritual</p>
+    </div>
+
+    <!-- 五列菜单 -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-4 md:gap-x-5" style="flex:1;overflow-y:auto;overflow-x:hidden;" class="no-scrollbar">
+
+        <!-- 砖茶/藏茶 -->
+        <div class="menu-col">
+            <div class="menu-cat-header">
+                <span class="font-headline italic text-on-surface" style="font-size:0.92rem;letter-spacing:0.1em;">藏茶</span>
+                <span style="font-size:7px;color:#3d342b;letter-spacing:0.2em;text-transform:uppercase;">DARK</span>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">糯香藏茶</p><p class="menu-row-sub">雅安 · 2020 · 糯香草窨</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">茉莉藏茶</p><p class="menu-row-sub">雅安 · 2020 · 茉莉窨</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">BrickTea 1号</p><p class="menu-row-sub">雅安 · 2014 · 深度发酵</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">BrickTea 2号</p><p class="menu-row-sub">雅安 · 2016 · 浅度发酵</p></div>
+                <p class="menu-row-price">¥28 · ¥58</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">BrickTea 3号</p><p class="menu-row-sub">雅安 · 2025 · 中度发酵</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">BrickTea 4号</p><p class="menu-row-sub">雅安 · 2015 · 深度发酵</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+        </div>
+
+        <!-- 白茶 -->
+        <div class="menu-col">
+            <div class="menu-cat-header">
+                <span class="font-headline italic text-on-surface" style="font-size:0.92rem;letter-spacing:0.1em;">白茶</span>
+                <span style="font-size:7px;color:#3d342b;letter-spacing:0.2em;text-transform:uppercase;">SILVER</span>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">月光美人</p><p class="menu-row-sub">云南景谷 · 2023</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">白毫银针</p><p class="menu-row-sub">福建福鼎 · 2025</p></div>
+                <p class="menu-row-price">¥48 · ¥78</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">黑牡丹</p><p class="menu-row-sub">云南无量山 · 2024</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+        </div>
+
+        <!-- 红茶 -->
+        <div class="menu-col">
+            <div class="menu-cat-header">
+                <span class="font-headline italic text-on-surface" style="font-size:0.92rem;letter-spacing:0.1em;">红茶</span>
+                <span style="font-size:7px;color:#3d342b;letter-spacing:0.2em;text-transform:uppercase;">CRIMSON</span>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">川红工夫</p><p class="menu-row-sub">四川蒲江 · 2025</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">滇红工夫</p><p class="menu-row-sub">云南凤庆 · 2025</p></div>
+                <p class="menu-row-price">¥28 · ¥58</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">甜桃</p><p class="menu-row-sub">福建桐木关 · 金牡丹</p></div>
+                <p class="menu-row-price">¥32 · ¥62</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">祁门工夫</p><p class="menu-row-sub">安徽黄山 · 2025</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">正山小种</p><p class="menu-row-sub">福建武夷山 · 2025</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+        </div>
+
+        <!-- 乌龙茶 -->
+        <div class="menu-col">
+            <div class="menu-cat-header">
+                <span class="font-headline italic text-on-surface" style="font-size:0.92rem;letter-spacing:0.1em;">乌龙茶</span>
+                <span style="font-size:7px;color:#3d342b;letter-spacing:0.2em;text-transform:uppercase;">VERDANT</span>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">漳平水仙</p><p class="menu-row-sub">福建漳平 · 2025</p></div>
+                <p class="menu-row-price">¥25 · ¥55</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">奇兰</p><p class="menu-row-sub">福建武夷山 · 岩茶</p></div>
+                <p class="menu-row-price">¥38 · ¥68</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">华岗原始林</p><p class="menu-row-sub">台湾梨山 · 青心乌龙</p></div>
+                <p class="menu-row-price">¥48 · ¥78</p>
+            </div>
+        </div>
+
+        <!-- 特色饮品 -->
+        <div class="menu-col">
+            <div class="menu-cat-header">
+                <span class="font-headline italic text-on-surface" style="font-size:0.92rem;letter-spacing:0.1em;">特饮</span>
+                <span style="font-size:7px;color:#3d342b;letter-spacing:0.2em;text-transform:uppercase;">SIGNATURE</span>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">小吴的杏皮水</p><p class="menu-row-sub">藏茶 · 李广杏 · 陈皮</p></div>
+                <p class="menu-row-price">¥38</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">星星</p><p class="menu-row-sub">月光美人 · 青苹果</p></div>
+                <p class="menu-row-price">¥38</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">果汁汽水</p><p class="menu-row-sub">NFC 果汁 · 现打气泡</p></div>
+                <p class="menu-row-price">¥28</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">酥油拿铁</p><p class="menu-row-sub">藏茶 · 酥油 · 炒米</p></div>
+                <p class="menu-row-price">¥38</p>
+            </div>
+            <div class="menu-row">
+                <div><p class="menu-row-name font-headline">蒸茶</p><p class="menu-row-sub">年份藏茶 · 蒸制</p></div>
+                <p class="menu-row-price">¥42</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部：一杯/一壶说明 -->
+    <div style="flex-shrink:0;margin-top:0.9rem;padding-top:0.65rem;border-top:1px solid rgba(61,52,43,0.3);display:flex;justify-content:center;align-items:center;gap:1.25rem;">
+        <div style="text-align:center;">
+            <p class="font-headline italic text-primary" style="font-size:0.8rem;letter-spacing:0.1em;">一杯</p>
+            <p style="font-size:7px;color:#3d342b;letter-spacing:0.12em;margin-top:2px;">320ml · 冷热可选 · 不续水</p>
+        </div>
+        <div style="width:1px;height:1.75rem;background:rgba(61,52,43,0.35);"></div>
+        <div style="text-align:center;">
+            <p class="font-headline italic text-primary" style="font-size:0.8rem;letter-spacing:0.1em;">一壶</p>
+            <p style="font-size:7px;color:#3d342b;letter-spacing:0.12em;margin-top:2px;">一席可续水 · 加杯 ¥15/人</p>
+        </div>
+        <div style="width:1px;height:1.75rem;background:rgba(61,52,43,0.35);"></div>
+        <p style="font-size:7px;color:#3d342b;letter-spacing:0.12em;">价格：杯 · 壶</p>
+    </div>
+
+</div>
+
+
+<script>
+    let isOverviewMode = false;
+    function toggleView() {
+        isOverviewMode = !isOverviewMode;
+        const screen = document.getElementById('overview-screen');
+        const header = document.querySelector('header');
+        const btn = document.getElementById('viewToggle');
+        if (isOverviewMode) {
+            screen.classList.add('visible');
+            header.classList.add('overview-active');
+            btn.textContent = '关闭';
+            document.body.style.overflow = 'hidden';
+        } else {
+            screen.classList.remove('visible');
+            header.classList.remove('overview-active');
+            btn.textContent = '一览';
+            document.body.style.overflow = '';
+        }
+    }
+</script>
+
 
 </body>
 </html>
